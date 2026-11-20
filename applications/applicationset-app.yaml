@@ -5,6 +5,9 @@ metadata:
   name: applicationset-app
   namespace: argocd
 
+  labels:
+    parent-app: platform-root
+
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 
