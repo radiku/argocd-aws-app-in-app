@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: echo-apps
+  namespace: argocd
+
+spec:
+  generators:
+  - list:
+      elements:
+      - env: dev
+      - env: test
+      - env: prod
+
+  template:
+    metadata:
+      name: 'echo-{{env}}'
+
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/radiku/argocd-applicationset-demo.git
+        targetRevision: HEAD
+        path: manifests
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'echo-{{env}}'
+
+      syncPolicy:
+
+        automated:
+          prune: true
+          selfHeal: true
+
+        syncOptions:
+          - CreateNamespace=true
